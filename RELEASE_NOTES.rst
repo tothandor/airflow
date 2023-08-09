@@ -128,6 +128,7 @@ New Features
 - Trigger Button - Implement Part 2 of AIP-50 (#31583)
 - Automatic setup and teardown tasks (`AIP-52 <https://github.com/apache/airflow/pulls?q=is%3Apr+is%3Amerged+label%3AAIP-52+milestone%3A%22Airflow+2.7.0%22>`_)
 - OpenLineage in Airflow (`AIP-53 <https://github.com/apache/airflow/pulls?q=is%3Apr+is%3Amerged+label%3AAIP-53+milestone%3A%22Airflow+2.7.0%22>`_)
+- Enable pools to consider deferred tasks (#32709)
 - Allows to choose SSL context for SMTP connection (#33070)
 - New gantt tab (#31806)
 - Load plugins from providers (#32692)
@@ -165,11 +166,14 @@ New Features
 
 Improvements
 """"""""""""
+- Configurable health check threshold for triggerer (#33089, #33084)
+- Add documentation generation for CLI commands from executors (#33081, #33143, #33081)
+- add dag_run_ids and task_ids filter for the batch task instance API endpoint (#32705)
 - Ensure DAG-level references are filled on unmap (#33083)
 - Add support for arrays of different data types in the Trigger Form UI (#32734)
 - Always show gantt and code tabs (#33029)
 - Move listener success hook to after SQLAlchemy commit (#32988)
-- Rename ``db upgrade`` to ``db migrate`` and add ``connections create-default-connections`` (#32810)
+- Rename ``db upgrade`` to ``db migrate`` and add ``connections create-default-connections`` (#32810, #33136)
 - Remove old gantt chart and redirect to grid views gantt tab (#32908)
 - Adjust graph zoom based on selected task (#32792)
 - Call listener on_task_instance_running after rendering templates (#32716)
@@ -214,6 +218,13 @@ Improvements
 
 Bug Fixes
 """""""""
+- ``Gantt chart:`` Use earliest/oldest ti dates if different than dag run start/end (#33215)
+- Fix ``virtualenv`` detection for Python ``virtualenv`` operator (#33223)
+- Correctly log when there are problems trying to ``chmod`` ``airflow.cfg`` (#33118)
+- Pass app context to webserver_config.py (#32759)
+- Skip served logs for non-running task try (#32561)
+- Fix reload gunicorn workers (#32102)
+- Fix future DagRun rarely triggered by race conditions when ``max_active_runs`` reached its upper limit. (#31414)
 - Fix BaseOperator ``get_task_instances`` query (#33054)
 - Fix issue with using the various state enum value in logs (#33065)
 - Use string concatenation to prepend base URL for log_url (#33063)
@@ -262,6 +273,15 @@ Bug Fixes
 
 Misc/Internal
 """""""""""""
+- Refactor: Simplify code in ``dag_processing`` (#33161)
+- For now limit ``Pydantic`` to ``< 2.0.0`` (#33235)
+- Refactor: Simplify code in models (#33181)
+- Add elasticsearch group to pre-2.7 defaults (#33166)
+- Refactor: Simplify dict manipulation in airflow/cli (#33159)
+- Remove redundant dict.keys() call (#33158)
+- Upgrade ruff to latest 0.0.282 version in pre-commits (#33152)
+- Move openlineage configuration to provider (#33124)
+- Replace State by TaskInstanceState in Airflow executors (#32627)
 - Get rid of Python 2 numeric relics (#33050)
 - Remove legacy dag code (#33058)
 - Remove legacy task instance modal (#33060)
@@ -304,7 +324,8 @@ Misc/Internal
 
 Docs only changes
 """""""""""""""""
-- Documentation change to enhance readability (#33006)
+- Add links to ``DAGRun / DAG / Task`` in templates-ref.rst (#33013)
+- Add example for list-import-errors as a CI check (#32811)
 - Clean-up of our new security page (#32951)
 - Cleans up Extras reference page (#32954)
 - Update Dag trigger API and command docs (#32696)
